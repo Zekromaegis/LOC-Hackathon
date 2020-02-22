@@ -8,7 +8,7 @@ from django.contrib.auth.models import User
 #]from django.views.decorators.csrf import csrf_exempt
 #from rest_framework.parsers import JSONParser
 from .models import Student
-from .serializers import StudentSerializer, UserSerializer
+from .serializers import StudentSerializer, UserSerializer, OnlyStudentSerializer
 from rest_framework import generics
 
 def index(request):
@@ -63,15 +63,18 @@ def student_list(request):
         serializer=StudentSerializer(students, many=True)
         return JsonResponse(serializer.data, safe=False)'''
 
-class StudentList(generics.CreateAPIView):
-    queryset=Student.objects.all()
-    serializer_class=StudentSerializer
-    #def perform_create(self, serializer):
-       #serializer.save(user = )
-
-class StudentDetail(generics.RetrieveUpdateDestroyAPIView):
-    serializer_class=StudentSerializer
+class StudentCreate(generics.CreateAPIView):
     permission_classes = [IsAuthenticated]
+    queryset=Student.objects.all()
+    serializer_class=OnlyStudentSerializer
+    def perform_create(self, serializer):
+       serializer.save(user = self.request.user)
+
+class StudentUpdate(generics.RetrieveUpdateDestroyAPIView):
+    serializer_class=OnlyStudentSerializer
+    permission_classes = [IsAuthenticated]
+    def get_object(self, queryset=None):
+        return Student.objects.filter(user=self.request.user)[0]
     def get_queryset(self):
         return Student.objects.filter(user=self.request.user)
 
@@ -81,6 +84,10 @@ class UserCreate(generics.CreateAPIView):
 
 #class UserLogin()
 
-class UserDetail(generics.RetrieveUpdateDestroyAPIView):
-    queryset=User.objects.all()
+class UserUpdate(generics.RetrieveUpdateDestroyAPIView):
+    permission_classes = [IsAuthenticated]
     serializer_class=UserSerializer
+    def get_object(self, queryset=None):
+        return self.request.user
+    def get_queryset(self):
+        return User.objects.filter(user=self.request.user.pk)

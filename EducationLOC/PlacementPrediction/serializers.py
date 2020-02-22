@@ -33,6 +33,11 @@ class UserSerializer(serializers.ModelSerializer):
         model=User
         fields=['username','password']
 
+class OnlyStudentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Student
+        exclude = ['user']
+
 class StudentSerializer(serializers.ModelSerializer):
     user = UserSerializer()
 
