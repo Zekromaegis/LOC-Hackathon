@@ -21,8 +21,7 @@ DEV=(
 )
 
 class Student(models.Model):
-    
-    user=models.OneToOneField(User, related_name='user',null=True, blank=True,on_delete=models.CASCADE)
+    user=models.OneToOneField(User, related_name='user', null=True, blank=True, on_delete=models.CASCADE)
     name=models.CharField(max_length=250)
     cgpa=models.FloatField()
     marks12=models.FloatField(max_length=250)
@@ -31,7 +30,18 @@ class Student(models.Model):
     internship=models.IntegerField()
     research_exp=models.IntegerField(choices=RESEARCH)
     gender=models.IntegerField(choices=GENDER)
-    dev_type=models.IntegerField(choices=DEV)  
+    dev_type=models.IntegerField(choices=DEV)
+    
+    AcolliteP = models.FloatField(null=True,blank=True)
+    AmazonP = models.FloatField(null=True,blank=True)
+    GrofersP = models.FloatField(null=True,blank=True)
+    HapticP = models.FloatField(null=True,blank=True)
+    MicrosoftP = models.FloatField(null=True,blank=True)
+    MorganStanleyP = models.FloatField(null=True,blank=True)
+    OracleP = models.FloatField(null=True,blank=True)
+    QuantifyP = models.FloatField(null=True,blank=True)
+    TCSP = models.FloatField(null=True,blank=True)
+    ValveP = models.FloatField(null=True,blank=True)
 
 @receiver(post_save, sender=settings.AUTH_USER_MODEL)
 def create_auth_token(sender, instance=None, created=False, **kwargs):
