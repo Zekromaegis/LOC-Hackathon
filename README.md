@@ -1,1 +1,1 @@
-# LOC-jugaad
+# LOC
